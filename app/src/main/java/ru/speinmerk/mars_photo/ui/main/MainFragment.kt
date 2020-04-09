@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import com.stfalcon.frescoimageviewer.ImageViewer
+import kotlinx.android.synthetic.main.main_fragment.*
 import kotlinx.android.synthetic.main.main_fragment.view.*
 import moxy.MvpAppCompatFragment
 import moxy.ktx.moxyPresenter
@@ -41,6 +42,9 @@ class MainFragment : MvpAppCompatFragment(), MainView {
         recyclerView.layoutManager = StaggeredGridLayoutManager(2, RecyclerView.VERTICAL)
         recyclerView.adapter = adapter
         presenter.photos.observe(viewLifecycleOwner, Observer {
+            if(it.isNotEmpty()) {
+                swipeLayout.isEnabled = false
+            }
             adapter.submitList(it)
         })
     }
@@ -48,8 +52,14 @@ class MainFragment : MvpAppCompatFragment(), MainView {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         presenter.isLoading.observe(viewLifecycleOwner, Observer {
-
+            swipeLayout.isRefreshing = it
         })
+        presenter.isRefreshing.observe(viewLifecycleOwner, Observer {
+            swipeLayout.isRefreshing = it
+        })
+        swipeLayout.setOnRefreshListener {
+            presenter.refresh()
+        }
     }
 
     override fun showImage(list: List<String>, position: Int) {

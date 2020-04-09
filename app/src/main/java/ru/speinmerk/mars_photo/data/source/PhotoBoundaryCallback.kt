@@ -33,7 +33,6 @@ class PhotoBoundaryCallback(
     }
 
     override fun onItemAtFrontLoaded(itemAtFront: Photo) {
-//        super.onItemAtFrontLoaded(itemAtFront)
     }
 
     private fun loadPhotos(
@@ -62,30 +61,4 @@ class PhotoBoundaryCallback(
             }
         }
     }
-
-//    private fun createWebserviceCallback(
-//        it: PagingRequestHelper.Request.Callback
-//    ) : Callback<PhotosResponse> {
-//        return object : Callback<PhotosResponse> {
-//            override fun onFailure(call: Call<PhotosResponse>, t: Throwable) {
-//                it.recordFailure(t)
-//            }
-//
-//            override fun onResponse(
-//                call: Call<PhotosResponse>,
-//                response: Response<PhotosResponse>
-//            ) {
-//                ioExecutor.execute {
-//                    val body = response.body()
-//                    if (body == null || body.photos.isEmpty()) {
-//                        prefs.isFullLoaded = true
-//                    } else {
-//                        handleResponse(body)
-//                        prefs.lastPageLoaded++
-//                    }
-//                    it.recordSuccess()
-//                }
-//            }
-//        }
-//    }
 }

@@ -1,6 +1,7 @@
 package ru.speinmerk.mars_photo.ui.main
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.map
 import kotlinx.coroutines.*
 import moxy.InjectViewState
@@ -8,6 +9,7 @@ import moxy.MvpPresenter
 import ru.speinmerk.mars_photo.App
 import ru.speinmerk.mars_photo.R
 import ru.speinmerk.mars_photo.data.Photo
+import ru.speinmerk.mars_photo.data.source.NetworkState
 import ru.speinmerk.mars_photo.data.source.PhotoRepository
 import ru.speinmerk.mars_photo.data.source.Status
 
@@ -18,7 +20,14 @@ class MainPresenter(
     private val listing = repository.getListingPhotos()
     val photos = listing.pagedList
     val isLoading = listing.networkState.map {
-        when (it.status) {
+        handleNetworkState(it, ::retry)
+    }
+    val isRefreshing = listing.refreshState.map {
+        handleNetworkState(it, ::refresh)
+    }
+
+    private fun handleNetworkState(state: NetworkState, retry: () -> Unit): Boolean {
+        return when (state.status) {
             Status.SUCCESS -> false
             Status.RUNNING -> true
             Status.FAILED -> {
@@ -31,9 +40,8 @@ class MainPresenter(
             }
         }
     }
-    val refreshState = listing.refreshState
 
-    private fun refresh() {
+    fun refresh() {
         listing.refresh.invoke()
     }
 

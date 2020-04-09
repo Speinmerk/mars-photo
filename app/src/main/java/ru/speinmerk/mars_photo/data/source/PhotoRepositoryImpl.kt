@@ -68,7 +68,9 @@ class PhotoRepositoryImpl(
                 page = 0
             )
             when(result) {
-                is ApiErrorResponse -> networkState.value = NetworkState.error(result.errorMessage)
+                is ApiErrorResponse -> {
+                    networkState.postValue(NetworkState.error(result.errorMessage))
+                }
                 is ApiEmptyResponse -> {
                     networkState.postValue(NetworkState.LOADED)
                 }
