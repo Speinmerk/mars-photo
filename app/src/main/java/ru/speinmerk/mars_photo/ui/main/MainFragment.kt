@@ -8,13 +8,14 @@ import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import com.google.android.material.snackbar.Snackbar
 import com.stfalcon.frescoimageviewer.ImageViewer
 import kotlinx.android.synthetic.main.main_fragment.view.*
 import moxy.MvpAppCompatFragment
 import moxy.ktx.moxyPresenter
 import org.koin.android.ext.android.get
 import ru.speinmerk.mars_photo.R
-import java.util.ArrayList
+import java.util.*
 
 class MainFragment : MvpAppCompatFragment(), MainView {
 
@@ -44,6 +45,13 @@ class MainFragment : MvpAppCompatFragment(), MainView {
         })
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        presenter.isLoading.observe(viewLifecycleOwner, Observer {
+
+        })
+    }
+
     override fun showImage(list: List<String>, position: Int) {
         ImageViewer.Builder(context, list)
             .setStartPosition(position)
@@ -59,6 +67,16 @@ class MainFragment : MvpAppCompatFragment(), MainView {
         AlertDialog.Builder(context!!).setItems(actionList) { _, which ->
             menuItems[which].second()
         }.create().show()
+    }
+
+    override fun showError(message: String, button: String?, btnCallback: (() -> Unit)?) {
+        val snackBar = Snackbar.make(view ?: return, message, Snackbar.LENGTH_LONG)
+        if (button != null && btnCallback != null) {
+            snackBar.setAction(button) {
+                btnCallback()
+            }
+        }
+        snackBar.show()
     }
 
 }

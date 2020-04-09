@@ -11,5 +11,6 @@ interface MainView : MvpView {
     fun showImage(list: List<String>, position: Int)
 
     fun showContextMenu(menuItems: ArrayList<Pair<String, () -> Unit>>)
+    fun showError(message: String, button: String? = null, btnCallback: (() -> Unit)? = null)
 
 }

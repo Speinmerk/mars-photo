@@ -6,7 +6,8 @@ buildscript {
             moxy                   : '2.0.2',
             room                   : '2.2.5',
             koin                   : '2.0.1',
-            nav                    : '2.2.1'
+            nav                    : '2.2.1',
+            materialdesign         : '1.2.0-alpha05'
     ]
     repositories {
         google()

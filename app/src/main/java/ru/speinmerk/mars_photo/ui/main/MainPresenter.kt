@@ -1,5 +1,7 @@
 package ru.speinmerk.mars_photo.ui.main
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.map
 import kotlinx.coroutines.*
 import moxy.InjectViewState
 import moxy.MvpPresenter
@@ -7,6 +9,7 @@ import ru.speinmerk.mars_photo.App
 import ru.speinmerk.mars_photo.R
 import ru.speinmerk.mars_photo.data.Photo
 import ru.speinmerk.mars_photo.data.source.PhotoRepository
+import ru.speinmerk.mars_photo.data.source.Status
 
 @InjectViewState
 class MainPresenter(
@@ -14,14 +17,27 @@ class MainPresenter(
 ) : MvpPresenter<MainView>(), CoroutineScope by MainScope() {
     private val listing = repository.getListingPhotos()
     val photos = listing.pagedList
-    val networkState = listing.networkState
+    val isLoading = listing.networkState.map {
+        when (it.status) {
+            Status.SUCCESS -> false
+            Status.RUNNING -> true
+            Status.FAILED -> {
+                viewState.showError(
+                    message = App.context.getString(R.string.error_loading),
+                    button = App.context.getString(R.string.btn_retry),
+                    btnCallback = ::retry
+                )
+                false
+            }
+        }
+    }
     val refreshState = listing.refreshState
 
-    fun refresh() {
+    private fun refresh() {
         listing.refresh.invoke()
     }
 
-    fun retry() {
+    private fun retry() {
         listing.retry.invoke()
     }
 
