@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">mars-photo</string>
+    <string name="delete">Удалить</string>
 </resources>

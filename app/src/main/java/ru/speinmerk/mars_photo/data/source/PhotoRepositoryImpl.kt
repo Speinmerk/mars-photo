@@ -53,6 +53,10 @@ class PhotoRepositoryImpl(
         return db.photos().getAll()
     }
 
+    override suspend fun deletePhoto(id: Int) {
+        db.photos().delete(id)
+    }
+
     @MainThread
     private fun refresh(): LiveData<NetworkState> {
         val networkState = MutableLiveData<NetworkState>()

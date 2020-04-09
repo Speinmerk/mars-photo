@@ -16,12 +16,13 @@ interface PhotoDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insert(photos: List<Photo>)
 
-    @Query("SELECT * FROM photos WHERE isDeleted = 0 ORDER BY id ASC")
+    @Query("SELECT * FROM photos WHERE isDeleted = 0")
     fun getPaged(): DataSource.Factory<Int, Photo>
 
-    @Query("SELECT * FROM photos WHERE isDeleted = 0 ORDER BY id ASC")
+    @Query("SELECT * FROM photos WHERE isDeleted = 0")
     suspend fun getAll(): List<Photo>
 
-//    fun delete(ids: List<Int>)
+    @Query("UPDATE photos SET isDeleted = 1 WHERE id = :id ")
+    suspend fun delete(id: Int)
 
 }

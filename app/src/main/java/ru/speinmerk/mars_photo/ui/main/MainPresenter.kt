@@ -3,6 +3,8 @@ package ru.speinmerk.mars_photo.ui.main
 import kotlinx.coroutines.*
 import moxy.InjectViewState
 import moxy.MvpPresenter
+import ru.speinmerk.mars_photo.App
+import ru.speinmerk.mars_photo.R
 import ru.speinmerk.mars_photo.data.Photo
 import ru.speinmerk.mars_photo.data.source.PhotoRepository
 
@@ -37,7 +39,19 @@ class MainPresenter(
 
     fun onLongClick(photo: Photo?): Boolean {
         photo ?: return false
+        val menuItems = ArrayList<Pair<String, () -> Unit>>()
+        val btnDeleteText = App.context.getString(R.string.delete)
+        menuItems.add(btnDeleteText to {
+            delete(photo)
+        })
+        viewState.showContextMenu(menuItems)
         return true
+    }
+
+    private fun delete(photo: Photo) {
+        launch {
+            repository.deletePhoto(photo.id)
+        }
     }
 
     override fun onDestroy() {

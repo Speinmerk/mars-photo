@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
@@ -13,6 +14,7 @@ import moxy.MvpAppCompatFragment
 import moxy.ktx.moxyPresenter
 import org.koin.android.ext.android.get
 import ru.speinmerk.mars_photo.R
+import java.util.ArrayList
 
 class MainFragment : MvpAppCompatFragment(), MainView {
 
@@ -48,20 +50,15 @@ class MainFragment : MvpAppCompatFragment(), MainView {
             .hideStatusBar(false)
             .allowZooming(true)
             .allowSwipeToDismiss(true)
-//            .setBackgroundColorRes(colorRes) //.setBackgroundColor(color)
-//            .setImageMargin(margin) //.setImageMarginPx(marginPx)
-//            .setContainerPadding(
-//                this,
-//                dimen
-//            ) //.setContainerPadding(this, dimenStart, dimenTop, dimenEnd, dimenBottom)
-            //.setContainerPaddingPx(padding)
-            //.setContainerPaddingPx(start, top, end, bottom)
-//            .setCustomImageRequestBuilder(imageRequestBuilder)
-//            .setCustomDraweeHierarchyBuilder(draweeHierarchyBuilder)
-//            .setImageChangeListener(imageChangeListener)
-//            .setOnDismissListener(onDismissListener)
-//            .setOverlayView(overlayView)
             .show()
+    }
+
+    override fun showContextMenu(menuItems: ArrayList<Pair<String, () -> Unit>>) {
+        context ?: return
+        val actionList = menuItems.map { it.first }.toTypedArray()
+        AlertDialog.Builder(context!!).setItems(actionList) { _, which ->
+            menuItems[which].second()
+        }.create().show()
     }
 
 }

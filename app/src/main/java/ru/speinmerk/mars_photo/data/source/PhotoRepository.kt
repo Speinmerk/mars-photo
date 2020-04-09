@@ -9,5 +9,6 @@ interface PhotoRepository {
 
     fun getListingPhotos(pageSize: Int = DEFAULT_PAGE_SIZE): Listing<Photo>
     suspend fun getPhotos(): List<Photo>
+    suspend fun deletePhoto(id: Int)
 
 }
